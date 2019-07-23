@@ -1,4 +1,7 @@
+const router = require('express').Router();
 
+const Users = require('./users-model.js');
+const authenticate = require('../auth/authenticate-mw')
 
 //WORKING
 router.get('/users', authenticate, (req, res) => {
