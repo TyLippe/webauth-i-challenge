@@ -1,16 +1,18 @@
 const express = require('express');
-const helmet = require('helmet');
-const cors = require('cors');
 
 const usersRouter = require('../users/users-router.js');
+const authRouter = require('../auth/auth-router.js');
+const setupGlobalMiddleware = require('./setup-middleware');
 
 const server = express();
 
-server.use(cors());
-server.use(helmet());
+setupGlobalMiddleware(server);
 
-server.use(express.json());
-server.use('/api', usersRouter);
+server.use('/api/auth', authRouter);
+server.use('/api/users', usersRouter);
 
+server.get('/', (req, res) => {
+    res.json({ api: 'up' });
+});
 
 module.exports = server;
