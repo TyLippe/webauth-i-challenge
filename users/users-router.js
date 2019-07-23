@@ -1,6 +1,4 @@
 const express = require('express');
-const helmet = require('helmet');
-const cors = require('cors');
 const bcrypt = require('bcryptjs');
 
 const Users = require('../users/users-model');
@@ -8,9 +6,8 @@ const authenticate = require('../auth/authenticate-mw');
 
 const router = express.Router();
 
-router.use(helmet());
 router.use(express.json());
-router.use(cors());
+
 
 //WORKING
 router.get('/', (req, res) => {
@@ -19,18 +16,28 @@ router.get('/', (req, res) => {
 
 //WORKING
 router.post('/register', (req, res) => {
-    let user = req.body;
+    let newUser = req.body;
 
-    const hash = bcrypt.hashSync(user.password, 8); 
-    user.password = hash;
+    const hash = bcrypt.hashSync(newUser.password, 8);
+    newUser.password = hash;
 
-    Users.add(user)
-        .then(saved => {
-            res.status(201).json(saved);
+    Users.findBy({ username: newUser.username })
+        .then(user => {
+            if (user) {
+                res.status(409).json({ message: 'Username is already taken.' })
+            } else {
+                Users.add(newUser)
+                    .then(saved => {
+                        res.status(201).json(saved);
+                    })
+                    .catch(error => {
+                        res.status(500).json(error);
+                    });
+            }
         })
-        .catch(error => {
-            res.status(500).json(error);
-        });
+        .catch(err => {
+            res.status(500).json(err)
+        })
 });
 
 //WORKING
