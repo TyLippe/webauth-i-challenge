@@ -13,22 +13,18 @@ function find() {
 
 function findBy(filter) {
     return db('users').where(filter)
-    .then(user => {
-        if(user.length) {
-            return user[0]
-        } else {
-            return null
-        }
-    })
+        .then(user => {
+            if (user.length) {
+                return user[0]
+            } else {
+                return null
+            }
+        })
 }
 
-function add(user) {
-    return db('users')
-        .insert(user, 'id')
-        .then(ids => {
-            const [id] = ids;
-            return findById(id);
-        });
+async function add(user) {
+    const [id] = await db('users').insert(user);
+    return findById(id);
 }
 
 function findById(id) {

@@ -3,10 +3,9 @@ const bcrypt = require('bcryptjs');
 
 const Users = require('../users/users-model');
 
-//WORKING
+//WORKING (still working)
 router.post('/register', (req, res) => {
     let newUser = req.body;
-
     const hash = bcrypt.hashSync(newUser.password, 8);
     newUser.password = hash;
 
@@ -29,12 +28,11 @@ router.post('/register', (req, res) => {
         })
 });
 
-//WORKING
+//WORKING (still working)
 router.post('/login', (req, res) => {
     let { username, password } = req.body;
 
     Users.findBy({ username })
-        .first()
         .then(user => {
             if (user && bcrypt.compareSync(password, user.password)) {
                 res.status(200).json({ message: `Welcome ${user.username}!` });
@@ -47,6 +45,7 @@ router.post('/login', (req, res) => {
         });
 });
 
+//res.status not a function
 router.get('/logout', (res, req) => {
     if(req.session) {
         req.session.destroy(err => {
