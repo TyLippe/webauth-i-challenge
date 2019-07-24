@@ -3,7 +3,7 @@ const router = require('express').Router();
 const Users = require('./users-model.js');
 const authenticate = require('../auth/authenticate-mw');
 
-//WORKING (auto invalid creds)
+//WORKING (WORKING)
 router.get('/', authenticate, (req, res) => {
     Users.find()
         .then(users => {
